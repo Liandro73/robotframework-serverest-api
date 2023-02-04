@@ -15,3 +15,10 @@ Cenário 02: Cadastrar usuário existente
     Cadastrar o usuário na ServeRest                        ${EMAIL_TEST}    201
     Vou repetir o cadastro com mesmo email
     Verificar se foi exibida mensagem de erro "Este email já está sendo usado" pela API
+
+Cenário 03: Consultar dados de usuário cadastrado
+    Criar um novo usuário
+    Cadastrar o usuário na ServeRest                        ${EMAIL_TEST}    201
+    Consultar os dados do novo usuário
+    Conferir dados retornados
+     

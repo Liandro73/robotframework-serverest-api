@@ -32,6 +32,9 @@ Cadastrar o usuário na ServeRest
     ...                                 json=${BODY}
     ...                                 expected_status=${status}
     
+    IF    ${RESPONSE.status_code} == 201
+        Set Test Variable                   ${USER_ID}    ${RESPONSE.json()["_id"]}
+    END
     Set Test Variable                   ${REPOSTA}    ${RESPONSE.json()}
 
 Conferir se o usuário foi cadastrado corretamente
@@ -44,3 +47,18 @@ Vou repetir o cadastro com mesmo email
 
 Verificar se foi exibida mensagem de erro "${MESSAGE_ERRO_REGISTERED_USER}" pela API
     Dictionary Should Contain Item      ${REPOSTA}    message    ${MESSAGE_ERRO_REGISTERED_USER}
+
+Consultar os dados do novo usuário
+    ${RESPONSE}                         GET On Session
+    ...                                 alias=ServeRest
+    ...                                 url=/usuarios/${USER_ID}
+    ...                                 expected_status=200
+    
+    Set Test Variable                   ${GET_RESPONSE}    ${RESPONSE.json()}
+
+Conferir dados retornados
+    Dictionary Should Contain Item    ${GET_RESPONSE}    nome               Testing Porter
+    Dictionary Should Contain Item    ${GET_RESPONSE}    email              ${EMAIL_TEST}
+    Dictionary Should Contain Item    ${GET_RESPONSE}    password           teste
+    Dictionary Should Contain Item    ${GET_RESPONSE}    administrador      true
+    Dictionary Should Contain Item    ${GET_RESPONSE}    _id                ${USER_ID}
